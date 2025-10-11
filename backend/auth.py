@@ -19,10 +19,11 @@ def register(user: user_schemas.UserCreate, db: Session = Depends(get_db)):
     
     hashed_password = utils.hash_password(user.password)
     new_user = models.User(username=user.username, password_hash=hashed_password)
+    token = utils.create_access_token(data={"sub": user.username})
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return {"message": "User registered successfully"}
+    return {"access_token" : token, "token_type" : "bearer"}
 
 @router.post("/login")
 def login(user: user_schemas.UserLogin, db: Session = Depends(get_db)):
