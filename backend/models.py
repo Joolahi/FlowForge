@@ -1,7 +1,9 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean, Enum
 from database import Base
 from sqlalchemy.orm import relationship
 from datetime import datetime
+import enum
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -17,7 +19,7 @@ class Project(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow())
     
     # User that owns a project
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -26,12 +28,19 @@ class Project(Base):
     # Tasks in the project
     tasks = relationship("Task", back_populates="project")
 
+class TaskStatus(str, enum.Enum):
+    TODO = "To Do"
+    IN_PROGRESS = "In Progress"
+    DONE = "Done"
+
 class Task(Base):
     __tablename__ = "tasks"
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     description = Column(Text)
     is_completed = Column(Boolean, default=False)
+    status = Column(Enum(TaskStatus), default=TaskStatus.TODO)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     project_id = Column(Integer, ForeignKey("projects.id"))
