@@ -65,13 +65,15 @@ def add_task(project_id: int, task: project_schemas.TaskCreate, db: Session = De
     db.refresh(new_task)
     return new_task
 
-@router.put("/{project_id}/tasks/{task_id}", response_model=project_schemas.TaskResponse)
+@router.put(
+    "/{project_id}/tasks/{task_id}", response_model=project_schemas.TaskUpdateResponse
+)
 def update_task(
     project_id: int,
     task_id: int,
     task_update: project_schemas.TaskUpdate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_user: models.User = Depends(get_current_user),
 ):
     task = (
         db.query(models.Task)
@@ -79,16 +81,18 @@ def update_task(
         .filter(
             models.Task.id == task_id,
             models.Project.id == project_id,
-            models.Project.owner_id == current_user.id
-        ).first()
-    ) 
+            models.Project.owner_id == current_user.id,
+        )
+        .first()
+    )
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
+    # Päivitä tehtävän kentät
     if task_update.title is not None:
         task.title = task_update.title
     if task_update.description is not None:
-        task.description = task_update.title
+        task.description = task_update.description
     if task_update.is_completed is not None:
         task.is_completed = task_update.is_completed
     if task_update.status is not None:
@@ -96,7 +100,16 @@ def update_task(
 
     db.commit()
     db.refresh(task)
-    return task 
+
+    # ✅ Lasketaan projektin eteneminen
+    project = db.query(models.Project).filter(models.Project.id == project_id).first()
+    total_tasks = len(project.tasks)
+    done_tasks = len([t for t in project.tasks if t.status == models.TaskStatus.DONE])
+    progress = round((done_tasks / total_tasks) * 100, 2) if total_tasks > 0 else 0.0
+
+    # Palautetaan päivitetty tehtävä ja laskettu progress
+    return {"task": project_schemas.TaskResponse.from_orm(task), "progress": progress}
+
 
 @router.delete("/{project_id}/tasks/{task_id}")
 def delete_task(project_id: int, task_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):

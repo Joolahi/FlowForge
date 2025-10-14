@@ -46,3 +46,10 @@ class TaskUpdate(BaseModel):
     description: Optional[str] = None
     is_completed: Optional[bool] = None
     status: Optional[TaskStatus] = None
+
+class TaskUpdateResponse(BaseModel):
+    task: TaskResponse
+    progress: float
+
+    class Config:
+        orm_mode: True
