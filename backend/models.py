@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean, Enum
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean, Enum, JSON, Float
 from database import Base
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -28,6 +28,9 @@ class Project(Base):
     # Tasks in the project
     tasks = relationship("Task", back_populates="project")
 
+    #Workflow steps
+    workflow_steps = relationship("WorkflowStep", back_populates="project")
+
 class TaskStatus(str, enum.Enum):
     TODO = "To Do"
     IN_PROGRESS = "In Progress"
@@ -45,3 +48,19 @@ class Task(Base):
 
     project_id = Column(Integer, ForeignKey("projects.id"))
     project = relationship("Project", back_populates="tasks")
+
+class WorkflowStep(Base):
+    __tablename__ = "workflow_steps"
+
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
+    name = Column(String, nullable=False)
+    action_type = Column(String, nullable=False)
+    config = Column(JSON, nullable=True)
+    position_x = Column(Float, default=0)
+    position_y = Column(Float, default=0)
+    next_step_id = Column(Integer, ForeignKey("workflow_steps.id"), nullable=True)
+
+    project = relationship("Project", back_populates="workflow_steps", foreign_keys=[project_id])
+    next_step = relationship("WorkflowStep", remote_side=[id])
+
