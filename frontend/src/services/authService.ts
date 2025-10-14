@@ -31,6 +31,6 @@ export const logout = () => {
 };
 
 export const getMyProfile = async () => {
-    const response = await axiosInstance.get('/user/me');
+    const response = await axiosInstance.get('/auth/me');
     return response.data;
 };
