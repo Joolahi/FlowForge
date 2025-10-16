@@ -53,6 +53,22 @@ def get_projects(
             project.progress = 0.0
     return projects
 
+@router.get("/{project_id}", response_model=project_schemas.ProjectResponse)
+def get_project_by_id(project_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    project = db.query(models.Project).filter(models.Project.id == project_id, models.Project.owner_id == current_user.id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    total_task = len(project.tasks)
+    if total_task > 0:
+        done_task = len([d for d in project.tasks if d.status == models.TaskStatus.DONE])
+        project.progress = round((done_task/total_task) * 100, 2)
+    else:
+        project.progress = 0.0
+
+    return project
+
+
 @router.post("/{project_id}/tasks", response_model=project_schemas.TaskResponse)
 def add_task(project_id: int, task: project_schemas.TaskCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     project = db.query(models.Project).filter(models.Project.id == project_id, models.Project.owner_id == current_user.id).first()
