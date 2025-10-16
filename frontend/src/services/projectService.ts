@@ -6,3 +6,8 @@ export const getProjects = async() => {
     return res.data;
 }
 
+
+export const getProjectById = async(id: number) => {
+    const res = await axiosInstance.get(`/projects/${id}`);
+    return res.data;
+}

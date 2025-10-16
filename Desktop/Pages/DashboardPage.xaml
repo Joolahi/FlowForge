@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Desktop.Pages.DashboardPage"
+             Title="Dashboard"
+             BackgroundColor="#f3f4f6">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="20">
+            <Label Text="Your Projects"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#1f2937" />
+
+            <CollectionView x:Name="ProjectsCollectionView"
+                            ItemsLayout="VerticalGrid, 2"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame CornerRadius="10"
+                               Padding="15"
+                               BackgroundColor="White"
+                               HasShadow="True"
+                               Margin="5">
+                            <StackLayout>
+                                <Label Text="{Binding Name}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="#374151" />
+
+                                <Label Text="{Binding Description}"
+                                       FontSize="14"
+                                       TextColor="#6b7280"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+
+                                <Label Text="{Binding ProgressText}"
+                                       FontSize="12"
+                                       TextColor="#9ca3af"
+                                       Margin="0,10,0,0" />
+
+                                <ProgressBar Progress="{Binding ProgressNormalized}"
+                                             ProgressColor="#3b82f6"
+                                             BackgroundColor="#e5e7eb"
+                                             HeightRequest="6"
+                                             />
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

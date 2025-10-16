@@ -10,6 +10,7 @@ import ReactFlow,{
 import "reactflow/dist/style.css";
 import { v4 as uuidv4 } from "uuid";
 import { getWorkflowSteps, saveWorkflowStep } from "../services/workflowService";
+import { Navbar } from '../components/Navbar';
 
 export default function WorkflowEditorPage() {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -84,6 +85,7 @@ export default function WorkflowEditorPage() {
 
     return (
         <div className="w-full h-[85vh]">
+            <Navbar/>
             <div className="flex justify-between p-4">
                 <button onClick={addNode} className="bg-blue-500 text-white px-4 py-2 rounded">
                     ➕ Lisää vaihe

@@ -1,0 +1,56 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Desktop.Pages.LoginPage"
+             BackgroundColor="#F3F4F6"
+             Title="Login">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20"
+                             VerticalOptions="CenterAndExpand"
+                             HorizontalOptions="CenterAndExpand">
+
+            <Frame Padding="20"
+                   BackgroundColor="White"
+                   CornerRadius="20"
+                   HasShadow="True"
+                   WidthRequest="350">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Login"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+
+                    <Entry x:Name="UsernameEntry"
+                           Placeholder="Username"
+                           Keyboard="Default" />
+
+                    <!-- Password Entry -->
+                    <Grid>
+                        <Entry x:Name="PasswordEntry"
+                               Placeholder="Password"
+                               IsPassword="{Binding IsPasswordHidden}"
+                               Margin="0,0,30,0"
+                               Text="{Binding Password}" />
+
+                        <ImageButton Source="{Binding PasswordToggleIcon}"
+                                     BackgroundColor="Transparent"
+                                     HorizontalOptions="End"
+                                     VerticalOptions="Center"
+                                     Clicked="TogglePasswordVisibility"
+                                     HeightRequest="24"
+                                     WidthRequest="24"/>
+                    </Grid>
+
+                    <Button Text="Login"
+                            BackgroundColor="#3B82F6"
+                            TextColor="White"
+                            Clicked="OnLoginClicked" />
+
+                    <Label x:Name="ErrorLabel"
+                           TextColor="Red"
+                           IsVisible="False" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -8,6 +8,7 @@ import {RegisterPage} from '../pages/RegisterPage';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { FrontPage } from  '../pages/FrontPage';
 import WorkflowEditorPage from '../pages/WorkflowEditorPage';
+import {ProjectDetailPage} from '../pages/ProjectDetailPage';
 
 export const AppRoutes = () => {
     return (
@@ -21,6 +22,7 @@ export const AppRoutes = () => {
             <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<DashboardPage/>} />
                 <Route path="/workflowEditor" element={<WorkflowEditorPage/>}/>
+                <Route path="/projects/:projectId" element={<ProjectDetailPage/>} />
             </Route>
 
             {/*404 route */}
